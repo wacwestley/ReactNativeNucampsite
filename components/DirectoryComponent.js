@@ -31,13 +31,13 @@ class Directory extends Component {
             );
         };
 
-        if(this.props.campsites.isLoading) {
+        if (this.props.campsites.isLoading) {
             return <Loading />;
         }
-        if(this.props.campsites.errMess) {
+        if (this.props.campsites.errMess) {
             return (
                 <View>
-                    <Text>{props.campsites.errMess}</Text>
+                    <Text>{this.props.campsites.errMess}</Text>
                 </View>
             );
         }
