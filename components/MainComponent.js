@@ -28,7 +28,7 @@ const mapDispatchToProps = {
 
 const LoginNavigator = createStackNavigator(
     {
-        Favorites: { screen: Login }
+        Login: { screen: Login }
     }, 
     {
         defaultNavigationOptions: ({navigation}) => ({
