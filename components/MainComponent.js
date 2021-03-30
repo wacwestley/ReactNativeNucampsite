@@ -26,32 +26,26 @@ const mapDispatchToProps = {
     fetchPartners
 };
 
-const DirectoryNavigator = createStackNavigator(
+const LoginNavigator = createStackNavigator(
     {
-        Directory: { 
-            screen: Directory,
-            navigationOptions: ({navigation}) => ({
-                headerLeft: <Icon
-                    name='list'
-                    type='font-awesome'
-                    iconStyle={styles.stackIcon}
-                    onPress={() => navigation.toggleDrawer()}
-                />
-            })
-        },
-        CampsiteInfo: { screen: CampsiteInfo }
+        Favorites: { screen: Login }
     }, 
     {
-        initialRouteName: 'Directory',
-        defaultNavigationOptions: {
+        defaultNavigationOptions: ({navigation}) => ({
             headerStyle: {
                 backgroundColor: '#5637DD'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
                 color: '#fff'
-            }
-        }
+            },
+            headerLeft: <Icon
+                    name='sign-in'
+                    type='font-awesome'
+                    iconStyle={styles.stackIcon}
+                    onPress={() => navigation.toggleDrawer()}
+                />
+        })
     }
 );
 
@@ -78,50 +72,32 @@ const HomeNavigator = createStackNavigator(
     }
 );
 
-
-const AboutNavigator = createStackNavigator(
+const DirectoryNavigator = createStackNavigator(
     {
-        About: { screen: About }
+        Directory: { 
+            screen: Directory,
+            navigationOptions: ({navigation}) => ({
+                headerLeft: <Icon
+                    name='list'
+                    type='font-awesome'
+                    iconStyle={styles.stackIcon}
+                    onPress={() => navigation.toggleDrawer()}
+                />
+            })
+        },
+        CampsiteInfo: { screen: CampsiteInfo }
     }, 
     {
-        defaultNavigationOptions: ({navigation}) => ({
+        initialRouteName: 'Directory',
+        defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: '#5637DD'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
                 color: '#fff'
-            },
-            headerLeft: <Icon
-                    name='info-circle'
-                    type='font-awesome'
-                    iconStyle={styles.stackIcon}
-                    onPress={() => navigation.toggleDrawer()}
-                />
-        })
-    }
-);
-
-const ContactNavigator = createStackNavigator(
-    {
-        Contact: { screen: Contact }
-    }, 
-    {
-        defaultNavigationOptions: ({navigation}) => ({
-            headerStyle: {
-                backgroundColor: '#5637DD'
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-                color: '#fff'
-            },
-            headerLeft: <Icon
-                    name='address-card'
-                    type='font-awesome'
-                    iconStyle={styles.stackIcon}
-                    onPress={() => navigation.toggleDrawer()}
-                />
-        })
+            }
+        }
     }
 );
 
@@ -171,9 +147,9 @@ const FavoritesNavigator = createStackNavigator(
     }
 );
 
-const LoginNavigator = createStackNavigator(
+const AboutNavigator = createStackNavigator(
     {
-        Favorites: { screen: Login }
+        About: { screen: About }
     }, 
     {
         defaultNavigationOptions: ({navigation}) => ({
@@ -185,7 +161,30 @@ const LoginNavigator = createStackNavigator(
                 color: '#fff'
             },
             headerLeft: <Icon
-                    name='sign-in'
+                    name='info-circle'
+                    type='font-awesome'
+                    iconStyle={styles.stackIcon}
+                    onPress={() => navigation.toggleDrawer()}
+                />
+        })
+    }
+);
+
+const ContactNavigator = createStackNavigator(
+    {
+        Contact: { screen: Contact }
+    }, 
+    {
+        defaultNavigationOptions: ({navigation}) => ({
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            },
+            headerLeft: <Icon
+                    name='address-card'
                     type='font-awesome'
                     iconStyle={styles.stackIcon}
                     onPress={() => navigation.toggleDrawer()}
@@ -330,17 +329,18 @@ class Main extends Component {
         this.props.fetchComments();
         this.props.fetchPromotions();
         this.props.fetchPartners();
-
-        NetInfo.fetch().then(connectionInfo => {
-            (Platform.OS === 'ios')
-                ? Alert.alert('Initial Network Connectivity Type:', connectionInfo.type)
-                : ToastAndroid.show('Initial Network Connectivity Type: ' + 
-                    connectionInfo.type, ToastAndroid.LONG);
-        });
-
+        this.showNetInfo();
         this.unsubscribeNetInfo = NetInfo.addEventListener(connectionInfo => {
             this.handleConnectivityChange(connectionInfo)
         });
+    }
+
+    showNetInfo = async () => {
+        const connectionInfo = await NetInfo.fetch()
+        Platform.OS === 'ios'
+                ? Alert.alert('Initial Network Connectivity Type:', connectionInfo.type)
+                : ToastAndroid.show('Initial Network Connectivity Type: ' + 
+                    connectionInfo.type, ToastAndroid.LONG);
     }
 
     componentWillUnmount() {
